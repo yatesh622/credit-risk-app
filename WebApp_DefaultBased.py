@@ -5,6 +5,36 @@ import joblib
 import matplotlib.pyplot as plt
 
 # =========================
+# LOGIN SYSTEM
+# =========================
+def login():
+
+    st.title("🔐 Login to Credit Risk System")
+
+    # hardcoded credentials (you can change)
+    USERNAME = "admin"
+    PASSWORD = "1234"
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if username == USERNAME and password == PASSWORD:
+            st.session_state["logged_in"] = True
+        else:
+            st.error("Invalid Credentials")
+
+# Session check
+if "logged_in" not in st.session_state:
+    st.session_state["logged_in"] = False
+
+# Stop app if not logged in
+if not st.session_state["logged_in"]:
+    login()
+    st.stop()
+
+
+# =========================
 # LOAD DATA + MODEL
 # =========================
 df = pd.read_csv("FinalData.csv")
@@ -15,6 +45,9 @@ scaler = joblib.load("scaler.pkl")
 st.set_page_config(page_title="Credit Risk System", layout="wide")
 
 st.title("💳 Credit Risk Analytics System")
+if st.button("Logout"):
+    st.session_state["logged_in"] = False
+    st.rerun()
 
 # =========================
 # TABS
